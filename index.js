@@ -46,7 +46,7 @@ let loop = function() {
 
     timer.on("done", () => {
         console.log("done!");
-        console.log("\007");
+	anybar("green");
         timer.stop();
         loop();
     });
