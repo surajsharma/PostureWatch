@@ -3,7 +3,7 @@
 #### Works great with Anybar
 
 ---
-[Demo](https://puu.sh/FkbvE/8cb9ebe0f7.gif)
+![Demo](https://puu.sh/FkbvE/8cb9ebe0f7.gif)
 
 
 First, start Anybar
