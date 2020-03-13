@@ -1,6 +1,6 @@
 ## PostureWatch
 ### CLI utility for better posture, made with NodeJS. 
-#### Works great with Anybar
+#### Works great with [Anybar](https://github.com/tonsky/AnyBar)
 
 ---
 ![Demo](https://puu.sh/FkbvE/8cb9ebe0f7.gif)
