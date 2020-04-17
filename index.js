@@ -29,7 +29,7 @@ let loop = function () {
 
     if (argv.auto) {
         console.log("auto mode");
-        timer.start(random.int(90000));
+        timer.start(random.int((min = 300000), (max = 600000)));
     } else {
         prompt.get(
             {
