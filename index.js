@@ -35,7 +35,7 @@ let loop = function() {
             if (res.howfar === "0") {
                 return process.kill(process.pid);
             }
-            timer.start(random.int(60000, Number(res.howfar) * 1000));
+            timer.start(random.int(60000, Number(res.howfar) * 10000));
             // run for x seconds
         }
     );
