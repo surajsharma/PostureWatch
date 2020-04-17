@@ -4,16 +4,16 @@ const random = require("random");
 const readline = require("readline");
 const prompt = require("prompt");
 const { exec } = require("child_process");
-
-var colors = require("colors/safe");
-
 const argv = require("yargs").argv;
+var colors = require("colors/safe");
 
 //
 // Setting these properties customizes the prompt.
 //
 
 anybar("exclamation");
+
+console.log(argv.auto);
 
 prompt.message = colors.rainbow("");
 prompt.delimiter = colors.green(" (0-9) ");
@@ -28,6 +28,7 @@ let loop = function () {
     let pauseTimer = new Timer([{ interval: 1000, stopwatch: false }]);
 
     if (argv.auto) {
+        console.log("auto mode");
         timer.start(random.int(90000));
     } else {
         prompt.get(
@@ -51,7 +52,7 @@ let loop = function () {
     }
     timer.on("tick", (ms) => {
         anybar("blue");
-        pauseTimer.start(1000);
+        pauseTimer.start(2000);
     });
 
     pauseTimer.on("done", () => {
