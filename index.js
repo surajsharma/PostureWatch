@@ -7,6 +7,8 @@ const { exec } = require("child_process");
 
 var colors = require("colors/safe");
 
+const argv = require("yargs").argv;
+
 //
 // Setting these properties customizes the prompt.
 //
@@ -15,43 +17,56 @@ anybar("exclamation");
 
 prompt.message = colors.rainbow("");
 prompt.delimiter = colors.green(" (0-9) ");
-
 prompt.start();
 
-let loop = function() {
-    exec("afplay /System/Library/Sounds/Glass.aiff")
-    exec("osascript -e 'display notification \"POSTURE!\"'")
+let loop = function () {
+    exec("afplay /System/Library/Sounds/Glass.aiff");
+    exec("osascript -e 'display notification \"POSTURE!\"'");
     anybar("question");
-    let timer = new Timer([{ interval: 1000, stpwatch: false }]);
-    prompt.get(
-        {
-            properties: {
-                howfar: {
-                    description: colors.green("Rate your posture (1-9), 0 to quit: ")
-                }
-            }
-        },
-        (err, res) => {
-            if (res.howfar === "0") {
-                return process.kill(process.pid);
-            }
-            timer.start(random.int(60000, Number(res.howfar) * 10000));
-            // run for x seconds
-        }
-    );
 
-    timer.on("tick", ms => {
+    let timer = new Timer([{ interval: 1000, stopwatch: false }]);
+    let pauseTimer = new Timer([{ interval: 1000, stopwatch: false }]);
+
+    if (argv.auto) {
+        timer.start(random.int(90000));
+    } else {
+        prompt.get(
+            {
+                properties: {
+                    howfar: {
+                        description: colors.green(
+                            "Rate your posture (1-9), 0 to quit: "
+                        ),
+                    },
+                },
+            },
+            (err, res) => {
+                if (res.howfar === "0") {
+                    return process.kill(process.pid);
+                }
+                timer.start(random.int(60000, Number(res.howfar) * 10000));
+                // run for x seconds
+            }
+        );
+    }
+    timer.on("tick", (ms) => {
+        anybar("blue");
+        pauseTimer.start(1000);
+    });
+
+    pauseTimer.on("done", () => {
+        console.log("pause done");
         anybar("red");
     });
 
     timer.on("done", () => {
         console.log("done!");
-	anybar("green");
+        anybar("green");
         timer.stop();
         loop();
     });
 
-    timer.on("statusChanged", status => console.log("status:", status));
+    timer.on("statusChanged", (status) => console.log("status:", status));
 };
 
 loop();
