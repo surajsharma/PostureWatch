@@ -1,27 +1,53 @@
 const anybar = require("anybar");
 const Timer = require("tiny-timer");
 const random = require("random");
-const readline = require("readline");
 const prompt = require("prompt");
-const { exec } = require("child_process");
 const argv = require("yargs").argv;
-var colors = require("colors/safe");
+const colors = require("colors/safe");
+const notifier = require("node-notifier");
+var player = require("play-sound")((opts = {}));
+var moment = require("moment");
 
 //
 // Setting these properties customizes the prompt.
 //
 
 anybar("exclamation");
-
-console.log(argv.auto);
+prompt.message = argv.auto
+    ? colors.red("Auto Mode")
+    : colors.blue("Manual Mode");
 
 prompt.message = colors.rainbow("");
 prompt.delimiter = colors.green(" (0-9) ");
 prompt.start();
 
+var bedTime = moment.duration("23:00", "HH:mm");
+var upTime = moment.duration("05:00", "HH:mm");
+
+let hoursToBed = bedTime.subtract(moment());
+let hoursToWake = upTime.subtract(moment());
+
+// var diff = end.subtract(start);
+// diff.hours(); // return hours
+// diff.minutes(); // return minutes
+
+const notifications = [
+    "POSTURE",
+    `${hoursToBed} before Bedtime! `,
+    `${hoursToWake} hours before Wake up time!`,
+];
+
 let loop = function () {
-    exec("afplay /System/Library/Sounds/Glass.aiff");
-    exec("osascript -e 'display notification \"POSTURE!\"'");
+    console.log(hoursToBed.hours(), hoursToWake.hours());
+    player.play("./zen.wav", (err) => {
+        if (err) throw err;
+    });
+    notifier.notify({
+        title: "Attention!",
+        message:
+            notifications[random.int((min = 0), (max = notifications.length))],
+    });
+
     anybar("question");
 
     let timer = new Timer([{ interval: 1000, stopwatch: false }]);
