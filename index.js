@@ -54,10 +54,11 @@ let loop = function () {
 
     let timer = new Timer([{ interval: 1000, stopwatch: false }]);
     let pauseTimer = new Timer([{ interval: 1000, stopwatch: false }]);
-
+    let autoNext = random.int((min = 300000), (max = 700000));
+    let to = moment().add(autoNext, "milliseconds").format("hh:mm:ss a");
     if (argv.auto) {
         console.log("auto mode");
-        timer.start(random.int((min = 300000), (max = 700000)));
+        timer.start(autoNext);
     } else {
         prompt.get(
             {
@@ -73,6 +74,7 @@ let loop = function () {
                 if (res.howfar === "0") {
                     return process.kill(process.pid);
                 }
+
                 timer.start(random.int(60000, Number(res.howfar) * 10000));
                 // run for x seconds
             }
@@ -84,7 +86,7 @@ let loop = function () {
     });
 
     pauseTimer.on("done", () => {
-        console.log(`now ${moment().format("hh:mm:ss a")}`);
+        console.log(`now ${moment().format("hh:mm:ss a")}, next at ${to}`);
         anybar("red");
     });
 
