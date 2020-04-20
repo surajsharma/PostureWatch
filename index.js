@@ -22,27 +22,19 @@ prompt.delimiter = colors.green(" (0-9) ");
 prompt.start();
 
 var bedTime = moment("23:00:00", "HH:mm:ss a");
-var upTime = moment.duration("05:00:00", "HH:mm:ss a");
+var upTime = moment("05:00:00", "HH:mm:ss a");
 
 let hoursToBed = moment().to(bedTime);
-let hoursToWake = moment().to(upTime);
-
-// var diff = end.subtract(start);
-// diff.hours(); // return hours
-// diff.minutes(); // return minutes
+let hoursToWake = moment().to(bedTime.add(6, "hours"));
 
 const notifications = [
+    `Wake up time ${hoursToWake}!`,
     "POSTURE!",
     `Bedtime ${hoursToBed}`,
-    `Wake up time ${hoursToWake}!`,
 ];
 
 let loop = function () {
     console.log(hoursToBed, hoursToWake);
-
-    player.play("./zen.wav", (err) => {
-        if (err) throw err;
-    });
 
     notifier.notify({
         title: "Attention!",
@@ -54,8 +46,9 @@ let loop = function () {
 
     let timer = new Timer([{ interval: 1000, stopwatch: false }]);
     let pauseTimer = new Timer([{ interval: 1000, stopwatch: false }]);
-    let autoNext = random.int((min = 300000), (max = 700000));
+    let autoNext = random.int((min = 60000), (max = 600000));
     let to = moment().add(autoNext, "milliseconds").format("hh:mm:ss a");
+
     if (argv.auto) {
         console.log("auto mode");
         timer.start(autoNext);
@@ -75,11 +68,12 @@ let loop = function () {
                     return process.kill(process.pid);
                 }
 
-                timer.start(random.int(60000, Number(res.howfar) * 10000));
+                timer.start(random.int(60000, Number(res.howfar) * 60000));
                 // run for x seconds
             }
         );
     }
+
     timer.on("tick", (ms) => {
         anybar("blue");
         pauseTimer.start(2000);
@@ -97,7 +91,12 @@ let loop = function () {
         loop();
     });
 
-    timer.on("statusChanged", (status) => console.log("status:", status));
+    timer.on("statusChanged", (status) => {
+        console.log("status:", status);
+        player.play("./zen.wav", (err) => {
+            if (err) throw err;
+        });
+    });
 };
 
 loop();
