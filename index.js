@@ -21,27 +21,29 @@ prompt.message = colors.rainbow("");
 prompt.delimiter = colors.green(" (0-9) ");
 prompt.start();
 
-var bedTime = moment.duration("23:00", "HH:mm");
-var upTime = moment.duration("05:00", "HH:mm");
+var bedTime = moment("23:00:00", "HH:mm:ss a");
+var upTime = moment.duration("05:00:00", "HH:mm:ss a");
 
-let hoursToBed = bedTime.subtract(moment());
-let hoursToWake = upTime.subtract(moment());
+let hoursToBed = moment().to(bedTime);
+let hoursToWake = moment().to(upTime);
 
 // var diff = end.subtract(start);
 // diff.hours(); // return hours
 // diff.minutes(); // return minutes
 
 const notifications = [
-    "POSTURE",
-    `${hoursToBed} before Bedtime! `,
-    `${hoursToWake} hours before Wake up time!`,
+    "POSTURE!",
+    `Bedtime ${hoursToBed}`,
+    `Wake up time ${hoursToWake}!`,
 ];
 
 let loop = function () {
-    console.log(hoursToBed.hours(), hoursToWake.hours());
+    console.log(hoursToBed, hoursToWake);
+
     player.play("./zen.wav", (err) => {
         if (err) throw err;
     });
+
     notifier.notify({
         title: "Attention!",
         message:
@@ -55,7 +57,7 @@ let loop = function () {
 
     if (argv.auto) {
         console.log("auto mode");
-        timer.start(random.int((min = 300000), (max = 600000)));
+        timer.start(random.int((min = 300000), (max = 700000)));
     } else {
         prompt.get(
             {
@@ -82,7 +84,7 @@ let loop = function () {
     });
 
     pauseTimer.on("done", () => {
-        console.log("pause done");
+        console.log(`now ${moment().format("hh:mm:ss a")}`);
         anybar("red");
     });
 
