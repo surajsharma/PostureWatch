@@ -22,15 +22,17 @@ prompt.delimiter = colors.green(" (0-9) ");
 prompt.start();
 
 var bedTime = moment("23:00:00", "HH:mm:ss a");
-var upTime = moment("05:00:00", "HH:mm:ss a");
+var upTime = bedTime.add(6, "hours");
 
 let hoursToBed = moment().to(bedTime);
-let hoursToWake = moment().to(bedTime.add(6, "hours"));
+
+let hoursToWake = moment().to(upTime);
 
 const notifications = [
     `Wake up time ${hoursToWake}!`,
     "POSTURE!",
     `Bedtime ${hoursToBed}`,
+    `1 THING, 🚬 TO THE EXCLUSION OF EVERYTHING ELSE`,
 ];
 
 let loop = function () {
