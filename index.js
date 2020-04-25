@@ -8,9 +8,7 @@ const notifier = require("node-notifier");
 var player = require("play-sound")((opts = {}));
 var moment = require("moment");
 
-//
 // Setting these properties customizes the prompt.
-//
 
 anybar("exclamation");
 prompt.message = argv.auto
@@ -25,7 +23,6 @@ var bedTime = moment("23:00:00", "HH:mm:ss a");
 var upTime = bedTime.add(6, "hours");
 
 let hoursToBed = moment().to(bedTime);
-
 let hoursToWake = moment().to(upTime);
 
 const notifications = [
@@ -47,8 +44,11 @@ let loop = function () {
     anybar("question");
 
     let timer = new Timer([{ interval: 1000, stopwatch: false }]);
+	
     let pauseTimer = new Timer([{ interval: 1000, stopwatch: false }]);
+	
     let autoNext = random.int((min = 60000), (max = 600000));
+	
     let to = moment().add(autoNext, "milliseconds").format("hh:mm:ss a");
 
     if (argv.auto) {
@@ -83,7 +83,8 @@ let loop = function () {
 
     pauseTimer.on("done", () => {
         console.log(`now ${moment().format("hh:mm:ss a")}, next at ${to}`);
-        anybar("red");
+    	console.log(` time to bed ${bedTime}, \n uptime is ${upTime}`)
+	anybar("red");
     });
 
     timer.on("done", () => {
