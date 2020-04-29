@@ -6,12 +6,11 @@ const argv = require("yargs").argv;
 const colors = require("colors/safe");
 const notifier = require("node-notifier");
 var player = require("play-sound")((opts = {}));
-var moment = require("moment");
-var dayjs = require("dayjs");
 
 // Setting these properties customizes the prompt.
 
 anybar("exclamation");
+
 prompt.message = argv.auto
     ? colors.red("Auto Mode")
     : colors.blue("Manual Mode");
@@ -30,40 +29,29 @@ const timeToWakeUp = tomorrow.setHours(6, 0, 0);
 // get total seconds between the times
 
 function getDelta(now, then) {
-    console.log(then, "now=" + now);
-
+    // console.log(then, "now=" + now);
     var delta = Math.abs(then - now) / 1000;
-
-    console.log(delta);
-
+    // console.log(delta);
     // calculate (and subtract) whole days
     let days = Math.floor(delta / 86400);
     delta -= days * 86400;
-
     // calculate (and subtract) whole hours
     let hours = Math.floor(delta / 3600) % 24;
     delta -= hours * 3600;
-
     // calculate (and subtract) whole minutes
     let minutes = Math.floor(delta / 60) % 60;
     delta -= minutes * 60;
-
     // what's left is seconds
     let seconds = delta % 60;
-
     // in theory the modulus is not required
-
-    return { d: days, h: hours, m: minutes, s: seconds };
+    return { d: days, h: hours, m: minutes, s: Math.round(seconds) };
 }
 
 const bedTime = getDelta(Date.now(), timeToBed);
 const upTime = getDelta(Date.now(), timeToWakeUp);
-const hoursToBed = `${bedTime.h} hours, ${bedTime.m} minutes, ${Math.round(
-    bedTime.s
-)} seconds`;
-const hoursToWake = `${upTime.h} hours, ${upTime.m} minutes, ${Math.round(
-    upTime.s
-)} seconds`;
+
+const hoursToBed = `${bedTime.h} hours, ${bedTime.m} minutes, ${bedTime.s} seconds`;
+const hoursToWake = `${upTime.h} hours, ${upTime.m} minutes, ${upTime.s} seconds`;
 
 const notifications = [
     "How Many Miles?",
@@ -72,6 +60,7 @@ const notifications = [
     "POSTURE!",
     `Bedtime in ${hoursToBed}`,
     `1 THING, TO THE EXCLUSION OF EVERYTHING ELSE`,
+    "Hydrate!",
 ];
 
 let loop = function () {
@@ -84,12 +73,8 @@ let loop = function () {
     anybar("question");
 
     let timer = new Timer([{ interval: 1000, stopwatch: false }]);
-
     let pauseTimer = new Timer([{ interval: 1000, stopwatch: false }]);
-
     let autoNext = random.int((min = 60000), (max = 600000));
-
-    let to = dayjs().add(autoNext, "milliseconds").format("hh:mm:ss a");
 
     if (argv.auto) {
         console.log("auto mode");
@@ -109,7 +94,6 @@ let loop = function () {
                 if (res.howfar === "0") {
                     return process.kill(process.pid);
                 }
-
                 timer.start(random.int(60000, Number(res.howfar) * 60000));
                 // run for x seconds
             }
@@ -122,8 +106,13 @@ let loop = function () {
     });
 
     pauseTimer.on("done", () => {
-        console.log(`now ${dayjs().format("hh:mm:ss a")}, next at ${to}`);
         anybar("red");
+        autoNext -= 2000;
+        let next = getDelta(Date.now(), Date.now() + autoNext);
+
+        console.log(
+            "Next buzz in " + next.m + " minutes " + next.s + " seconds "
+        );
     });
 
     timer.on("done", () => {
