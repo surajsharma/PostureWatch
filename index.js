@@ -7,6 +7,7 @@ const colors = require("colors/safe");
 const notifier = require("node-notifier");
 var player = require("play-sound")((opts = {}));
 var moment = require("moment");
+var dayjs = require("dayjs");
 
 // Setting these properties customizes the prompt.
 
@@ -19,22 +20,61 @@ prompt.message = colors.rainbow("");
 prompt.delimiter = colors.green(" (0-9) ");
 prompt.start();
 
-var bedTime = moment("23:00:00", "HH:mm:ss a");
-var upTime = bedTime.add(6, "hours");
+var today = new Date();
+var tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
 
-let hoursToBed = moment().to(bedTime);
-let hoursToWake = moment().to(upTime);
+const timeToBed = today.setHours(23, 0, 0);
+const timeToWakeUp = tomorrow.setHours(6, 0, 0);
+
+// get total seconds between the times
+
+function getDelta(now, then) {
+    console.log(then, "now=" + now);
+
+    var delta = Math.abs(then - now) / 1000;
+
+    console.log(delta);
+
+    // calculate (and subtract) whole days
+    let days = Math.floor(delta / 86400);
+    delta -= days * 86400;
+
+    // calculate (and subtract) whole hours
+    let hours = Math.floor(delta / 3600) % 24;
+    delta -= hours * 3600;
+
+    // calculate (and subtract) whole minutes
+    let minutes = Math.floor(delta / 60) % 60;
+    delta -= minutes * 60;
+
+    // what's left is seconds
+    let seconds = delta % 60;
+
+    // in theory the modulus is not required
+
+    return { d: days, h: hours, m: minutes, s: seconds };
+}
+
+const bedTime = getDelta(Date.now(), timeToBed);
+const upTime = getDelta(Date.now(), timeToWakeUp);
+const hoursToBed = `${bedTime.h} hours, ${bedTime.m} minutes, ${Math.round(
+    bedTime.s
+)} seconds`;
+const hoursToWake = `${upTime.h} hours, ${upTime.m} minutes, ${Math.round(
+    upTime.s
+)} seconds`;
 
 const notifications = [
-    `Wake up time ${hoursToWake}!`,
+    "How Many Miles?",
+    "Deep Breath!",
+    `Wake up time in ${hoursToWake}!`,
     "POSTURE!",
-    `Bedtime ${hoursToBed}`,
-    `1 THING, 🚬 TO THE EXCLUSION OF EVERYTHING ELSE`,
+    `Bedtime in ${hoursToBed}`,
+    `1 THING, TO THE EXCLUSION OF EVERYTHING ELSE`,
 ];
 
 let loop = function () {
-    console.log(hoursToBed, hoursToWake);
-
     notifier.notify({
         title: "Attention!",
         message:
@@ -44,12 +84,12 @@ let loop = function () {
     anybar("question");
 
     let timer = new Timer([{ interval: 1000, stopwatch: false }]);
-	
+
     let pauseTimer = new Timer([{ interval: 1000, stopwatch: false }]);
-	
+
     let autoNext = random.int((min = 60000), (max = 600000));
-	
-    let to = moment().add(autoNext, "milliseconds").format("hh:mm:ss a");
+
+    let to = dayjs().add(autoNext, "milliseconds").format("hh:mm:ss a");
 
     if (argv.auto) {
         console.log("auto mode");
@@ -82,9 +122,8 @@ let loop = function () {
     });
 
     pauseTimer.on("done", () => {
-        console.log(`now ${moment().format("hh:mm:ss a")}, next at ${to}`);
-    	console.log(` time to bed ${bedTime}, \n uptime is ${upTime}`)
-	anybar("red");
+        console.log(`now ${dayjs().format("hh:mm:ss a")}, next at ${to}`);
+        anybar("red");
     });
 
     timer.on("done", () => {

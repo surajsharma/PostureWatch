@@ -12,8 +12,6 @@
     "dependencies": {
         "anybar": "^3.0.0",
         "colors": "^1.3.3",
-        "dayjs": "^1.8.25",
-        "moment": "^2.24.0",
         "node-notifier": "^7.0.0",
         "play-sound": "^1.1.3",
         "prompt": "^1.0.0",
