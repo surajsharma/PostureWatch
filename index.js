@@ -47,24 +47,25 @@ function getDelta(now, then) {
     return { d: days, h: hours, m: minutes, s: Math.round(seconds) };
 }
 
-const bedTime = getDelta(Date.now(), timeToBed);
-const upTime = getDelta(Date.now(), timeToWakeUp);
-
-const hoursToBed = `${bedTime.h} hours, ${bedTime.m} minutes, ${bedTime.s} seconds`;
-const hoursToWake = `${upTime.h} hours, ${upTime.m} minutes, ${upTime.s} seconds`;
-
-const notifications = [
-    "How Many Miles?",
-    "Deep Breath!",
-    `Wake up time in ${hoursToWake}!`,
-    "POSTURE!",
-    `Bedtime in ${hoursToBed}`,
-    `1 THING, TO THE EXCLUSION OF EVERYTHING ELSE`,
-    "Hydrate!",
-];
-
 let loop = function () {
+    const bedTime = getDelta(Date.now(), timeToBed);
+    const upTime = getDelta(Date.now(), timeToWakeUp);
+
+    const hoursToBed = `${bedTime.h} hours, ${bedTime.m} minutes, ${bedTime.s} seconds`;
+    const hoursToWake = `${upTime.h} hours, ${upTime.m} minutes, ${upTime.s} seconds`;
+
+    const notifications = [
+        "How Many Miles?",
+        "Deep Breath!",
+        `Wake up time in ${hoursToWake}!`,
+        "POSTURE!",
+        `Bedtime in ${hoursToBed}`,
+        `1 THING, TO THE EXCLUSION OF EVERYTHING ELSE`,
+        "Hydrate!",
+    ];
+
     let anybarToggle = false;
+
     notifier.notify({
         title: "Attention!",
         message:
