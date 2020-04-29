@@ -64,6 +64,7 @@ const notifications = [
 ];
 
 let loop = function () {
+    let anybarToggle = false;
     notifier.notify({
         title: "Attention!",
         message:
@@ -77,7 +78,7 @@ let loop = function () {
     let autoNext = random.int((min = 60000), (max = 600000));
 
     if (argv.auto) {
-        console.log("auto mode");
+        console.log(`auto mode = ${argv.auto}, verbose = ${argv.verbose}`);
         timer.start(autoNext);
     } else {
         prompt.get(
@@ -102,10 +103,11 @@ let loop = function () {
 
     timer.on("tick", (ms) => {
         pauseTimer.start(2000);
-        anybar("red");
     });
 
     pauseTimer.on("done", () => {
+        anybarToggle = !anybarToggle;
+
         autoNext -= 2000;
         let next = getDelta(Date.now(), Date.now() + autoNext);
 
@@ -114,7 +116,7 @@ let loop = function () {
                 "Next buzz in " + next.m + " minutes " + next.s + " seconds "
             );
         }
-        anybar("blue");
+        anybarToggle ? anybar("blue") : anybar("red");
     });
 
     timer.on("done", () => {
