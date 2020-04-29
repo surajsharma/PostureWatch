@@ -101,18 +101,20 @@ let loop = function () {
     }
 
     timer.on("tick", (ms) => {
-        anybar("blue");
         pauseTimer.start(2000);
+        anybar("red");
     });
 
     pauseTimer.on("done", () => {
-        anybar("red");
         autoNext -= 2000;
         let next = getDelta(Date.now(), Date.now() + autoNext);
 
-        console.log(
-            "Next buzz in " + next.m + " minutes " + next.s + " seconds "
-        );
+        if (argv.verbose) {
+            console.log(
+                "Next buzz in " + next.m + " minutes " + next.s + " seconds "
+            );
+        }
+        anybar("blue");
     });
 
     timer.on("done", () => {
