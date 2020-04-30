@@ -62,7 +62,7 @@ let loop = function () {
         `Bedtime in ${hoursToBed}`,
         `1 THING, TO THE EXCLUSION OF EVERYTHING ELSE`,
         "HYDRATE!",
-        "WHAT ARE YOU SCARED OF?",
+        "👂",
     ];
 
     let anybarToggle = false;
