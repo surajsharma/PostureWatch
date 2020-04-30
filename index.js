@@ -55,13 +55,14 @@ let loop = function () {
     const hoursToWake = `${upTime.h} hours, ${upTime.m} minutes, ${upTime.s} seconds`;
 
     const notifications = [
-        "How Many Miles?",
+        "Where are you going?",
         "Deep Breath!",
         `Wake up time in ${hoursToWake}!`,
         "POSTURE!",
         `Bedtime in ${hoursToBed}`,
         `1 THING, TO THE EXCLUSION OF EVERYTHING ELSE`,
-        "Hydrate!",
+        "HYDRATE!",
+        "WHAT ARE YOU SCARED OF?",
     ];
 
     let anybarToggle = false;
