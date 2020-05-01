@@ -5,7 +5,12 @@ const prompt = require("prompt");
 const argv = require("yargs").argv;
 const colors = require("colors/safe");
 const notifier = require("node-notifier");
-var player = require("play-sound")((opts = {}));
+var fs = require("fs");
+var wav = require("wav");
+var Speaker = require("speaker");
+
+var file = fs.createReadStream("zen.wav");
+var reader = new wav.Reader();
 
 // Setting these properties customizes the prompt.
 
@@ -48,6 +53,11 @@ function getDelta(now, then) {
 }
 
 let loop = function () {
+    // the "format" event gets emitted at the end of the WAVE header
+    reader.on("format", function (format) {
+        // the WAVE header is stripped from the output of the reader
+        reader.pipe(new Speaker(format));
+    });
     const bedTime = getDelta(Date.now(), timeToBed);
     const upTime = getDelta(Date.now(), timeToWakeUp);
 
@@ -81,8 +91,12 @@ let loop = function () {
 
     if (argv.auto) {
         console.log(`auto mode = ${argv.auto}, verbose = ${argv.verbose}`);
+        file.pipe(reader);
+
         timer.start(autoNext);
     } else {
+        file.pipe(reader);
+
         prompt.get(
             {
                 properties: {
@@ -117,6 +131,7 @@ let loop = function () {
             console.log(
                 "Next buzz in " + next.m + " minutes " + next.s + " seconds "
             );
+            // console.log("to bed: " + hoursToBed, "to wake up: " + hoursToWake);
         }
         anybarToggle ? anybar("blue") : anybar("red");
     });
@@ -130,17 +145,7 @@ let loop = function () {
 
     timer.on("statusChanged", (status) => {
         console.log("status:", status);
-        player.play("./zen.wav", (err) => {
-            if (err) throw err;
-        });
     });
 };
 
 loop();
-
-// run for x seconds
-// timer.stop()
-// timer.pause()
-// timer.resume()
-//events -> .on/done/statusChanged('tick'/'done'/'statusChanged', (ms/status) => {})
-//properties timer.time, timer.duration, timer.status
