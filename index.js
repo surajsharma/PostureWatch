@@ -5,12 +5,6 @@ const prompt = require("prompt");
 const argv = require("yargs").argv;
 const colors = require("colors/safe");
 const notifier = require("node-notifier");
-var fs = require("fs");
-var wav = require("wav");
-var Speaker = require("speaker");
-
-var file = fs.createReadStream("zen.wav");
-var reader = new wav.Reader();
 
 // Setting these properties customizes the prompt.
 
@@ -53,11 +47,6 @@ function getDelta(now, then) {
 }
 
 let loop = function () {
-    // the "format" event gets emitted at the end of the WAVE header
-    reader.on("format", function (format) {
-        // the WAVE header is stripped from the output of the reader
-        reader.pipe(new Speaker(format));
-    });
     const bedTime = getDelta(Date.now(), timeToBed);
     const upTime = getDelta(Date.now(), timeToWakeUp);
 
@@ -91,12 +80,30 @@ let loop = function () {
 
     if (argv.auto) {
         console.log(`auto mode = ${argv.auto}, verbose = ${argv.verbose}`);
-        file.pipe(reader);
-
+        const player = require("node-wav-player");
+        player
+            .play({
+                path: "./zen.wav",
+            })
+            .then(() => {
+                console.log("The wav file started to be played successfully.");
+            })
+            .catch((error) => {
+                console.error(error);
+            });
         timer.start(autoNext);
     } else {
-        file.pipe(reader);
-
+        const player = require("node-wav-player");
+        player
+            .play({
+                path: "./zen.wav",
+            })
+            .then(() => {
+                console.log("The wav file started to be played successfully.");
+            })
+            .catch((error) => {
+                console.error(error);
+            });
         prompt.get(
             {
                 properties: {
