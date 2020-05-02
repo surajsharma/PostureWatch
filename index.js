@@ -19,13 +19,6 @@ prompt.message = colors.rainbow("");
 prompt.delimiter = colors.green(" (0-9) ");
 prompt.start();
 
-var today = new Date();
-var tomorrow = new Date(today);
-tomorrow.setDate(tomorrow.getDate() + 1);
-
-const timeToBed = today.setHours(23, 0, 0);
-const timeToWakeUp = tomorrow.setHours(6, 0, 0);
-
 // get total seconds between the times
 
 function getDelta(now, then) {
@@ -48,6 +41,13 @@ function getDelta(now, then) {
 }
 
 let loop = function () {
+    var today = new Date();
+    var tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    const timeToBed = today.setHours(23, 0, 0);
+    const timeToWakeUp = tomorrow.setHours(6, 0, 0);
+
     const bedTime = getDelta(Date.now(), timeToBed);
     const upTime = getDelta(Date.now(), timeToWakeUp);
 
@@ -57,9 +57,9 @@ let loop = function () {
     const notifications = [
         "Where are you going?",
         "Deep Breath!",
-        `Wake up time in ${hoursToWake}!`,
+        `6AM Wake Up! in ${hoursToWake}!`,
         "POSTURE!",
-        `Bedtime in ${hoursToBed}`,
+        `11PM Bedtime in ${hoursToBed}`,
         `1 THING, TO THE EXCLUSION OF EVERYTHING ELSE`,
         "HYDRATE!",
         "👂",
