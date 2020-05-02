@@ -7,6 +7,7 @@ const colors = require("colors/safe");
 const notifier = require("node-notifier");
 const player = require("node-wav-player");
 const clear = require("clear");
+var figlet = require("figlet");
 // Setting these properties customizes the prompt.
 
 anybar("exclamation");
@@ -44,7 +45,7 @@ let loop = function () {
     var today = new Date();
     var tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
+
     const timeToBed = today.setHours(23, 0, 0);
     const timeToWakeUp = tomorrow.setHours(6, 0, 0);
 
@@ -135,8 +136,22 @@ let loop = function () {
 
         if (argv.verbose) {
             clear();
-            console.log(
-                "Next buzz in " + next.m + " minutes " + next.s + " seconds "
+
+            figlet.text(
+                next.m + " : " + next.s,
+                {
+                    font: "ANSI Regular",
+                    horizontalLayout: "default",
+                    verticalLayout: "default",
+                },
+                function (err, data) {
+                    if (err) {
+                        console.log("Something went wrong...");
+                        console.dir(err);
+                        return;
+                    }
+                    console.log(data);
+                }
             );
             // console.log("to bed: " + hoursToBed, "to wake up: " + hoursToWake);
         }
