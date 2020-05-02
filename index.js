@@ -5,7 +5,8 @@ const prompt = require("prompt");
 const argv = require("yargs").argv;
 const colors = require("colors/safe");
 const notifier = require("node-notifier");
-
+const player = require("node-wav-player");
+const clear = require("clear");
 // Setting these properties customizes the prompt.
 
 anybar("exclamation");
@@ -80,7 +81,6 @@ let loop = function () {
 
     if (argv.auto) {
         console.log(`auto mode = ${argv.auto}, verbose = ${argv.verbose}`);
-        const player = require("node-wav-player");
         player
             .play({
                 path: "./zen.wav",
@@ -93,7 +93,6 @@ let loop = function () {
             });
         timer.start(autoNext);
     } else {
-        const player = require("node-wav-player");
         player
             .play({
                 path: "./zen.wav",
@@ -135,6 +134,7 @@ let loop = function () {
         let next = getDelta(Date.now(), Date.now() + autoNext);
 
         if (argv.verbose) {
+            clear();
             console.log(
                 "Next buzz in " + next.m + " minutes " + next.s + " seconds "
             );
