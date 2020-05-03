@@ -66,6 +66,8 @@ let loop = function () {
         "👂",
     ];
 
+    const sounds = ["zen.wav", "gong.wav"];
+
     let anybarToggle = false;
 
     notifier.notify({
@@ -84,7 +86,8 @@ let loop = function () {
         console.log(`auto mode = ${argv.auto}, verbose = ${argv.verbose}`);
         player
             .play({
-                path: "./zen.wav",
+                path:
+                    "./" + sounds[random.int((min = 0), (max = sounds.length))],
             })
             .then(() => {
                 console.log("The wav file started to be played successfully.");
@@ -96,7 +99,8 @@ let loop = function () {
     } else {
         player
             .play({
-                path: "./zen.wav",
+                path:
+                    "./" + sounds[random.int((min = 0), (max = sounds.length))],
             })
             .then(() => {
                 console.log("The wav file started to be played successfully.");
@@ -140,7 +144,7 @@ let loop = function () {
             figlet.text(
                 next.m + " : " + next.s,
                 {
-                    font: "ANSI Regular",
+                    font: "ANSI Shadow",
                     horizontalLayout: "default",
                     verticalLayout: "default",
                 },
