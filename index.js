@@ -7,7 +7,7 @@ const colors = require("colors/safe");
 const notifier = require("node-notifier");
 const player = require("node-wav-player");
 const clear = require("clear");
-var figlet = require("figlet");
+const figlet = require("figlet");
 // Setting these properties customizes the prompt.
 
 anybar("exclamation");
@@ -67,13 +67,16 @@ let loop = function () {
     ];
 
     const sounds = ["zen.wav", "gong.wav"];
+    const randomSound =  sounds[Math.floor(Math.random() * sounds.length)];
 
+    console.log(randomSound);
+	    
     let anybarToggle = false;
 
     notifier.notify({
         title: "Attention!",
         message:
-            notifications[random.int((min = 0), (max = notifications.length))],
+            notifications[Math.floor(Math.random() * notifications.length)],
     });
 
     anybar("question");
@@ -87,7 +90,7 @@ let loop = function () {
         player
             .play({
                 path:
-                    "./" + sounds[random.int((min = 0), (max = sounds.length))],
+                    "./" + randomSound,
             })
             .then(() => {
                 console.log("The wav file started to be played successfully.");
@@ -100,7 +103,7 @@ let loop = function () {
         player
             .play({
                 path:
-                    "./" + sounds[random.int((min = 0), (max = sounds.length))],
+                    "./" + randomSound,
             })
             .then(() => {
                 console.log("The wav file started to be played successfully.");
@@ -156,8 +159,9 @@ let loop = function () {
                     }
                     console.log(data);
                 }
-            );
-            // console.log("to bed: " + hoursToBed, "to wake up: " + hoursToWake);
+	    );     
+
+		// console.log("to bed: " + hoursToBed, "to wake up: " + hoursToWake);
         }
         anybarToggle ? anybar("blue") : anybar("red");
     });
