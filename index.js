@@ -56,21 +56,22 @@ let loop = function () {
     const hoursToWake = `${upTime.h} hours, ${upTime.m} minutes, ${upTime.s} seconds`;
 
     const notifications = [
-        "Where are you going?",
+        "PUSHUPS!",
         "Deep Breath!",
         `6AM Wake Up! in ${hoursToWake}!`,
         "POSTURE!",
         `11PM Bedtime in ${hoursToBed}`,
         `1 THING, TO THE EXCLUSION OF EVERYTHING ELSE`,
         "HYDRATE!",
-        "👂",
+        "PLANK!",
+        "30 min React Sprint!",
     ];
 
     const sounds = ["zen.wav", "gong.wav"];
-    const randomSound =  sounds[Math.floor(Math.random() * sounds.length)];
+    const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
 
     console.log(randomSound);
-	    
+
     let anybarToggle = false;
 
     notifier.notify({
@@ -89,8 +90,7 @@ let loop = function () {
         console.log(`auto mode = ${argv.auto}, verbose = ${argv.verbose}`);
         player
             .play({
-                path:
-                    "./" + randomSound,
+                path: "./" + randomSound,
             })
             .then(() => {
                 console.log("The wav file started to be played successfully.");
@@ -102,8 +102,7 @@ let loop = function () {
     } else {
         player
             .play({
-                path:
-                    "./" + randomSound,
+                path: "./" + randomSound,
             })
             .then(() => {
                 console.log("The wav file started to be played successfully.");
@@ -159,9 +158,9 @@ let loop = function () {
                     }
                     console.log(data);
                 }
-	    );     
+            );
 
-		// console.log("to bed: " + hoursToBed, "to wake up: " + hoursToWake);
+            // console.log("to bed: " + hoursToBed, "to wake up: " + hoursToWake);
         }
         anybarToggle ? anybar("blue") : anybar("red");
     });
