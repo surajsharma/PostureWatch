@@ -66,6 +66,7 @@ let loop = function () {
         "PLANK!",
         "BACK TO WORK!",
         "STAND UP!!",
+        "Dominant Question?",
     ];
 
     const sounds = ["zen.wav", "gong.wav"];
