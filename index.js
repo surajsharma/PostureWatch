@@ -57,14 +57,15 @@ let loop = function () {
 
     const notifications = [
         "PUSHUPS!",
-        "Deep Breath!",
+        "DIAPHRAGM!",
         `6AM Wake Up! in ${hoursToWake}!`,
         "POSTURE!",
         `11PM Bedtime in ${hoursToBed}`,
         `1 THING, TO THE EXCLUSION OF EVERYTHING ELSE`,
         "HYDRATE!",
         "PLANK!",
-        "30 min React Sprint!",
+        "BACK TO WORK!",
+        "STAND UP!!",
     ];
 
     const sounds = ["zen.wav", "gong.wav"];
