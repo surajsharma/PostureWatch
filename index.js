@@ -80,6 +80,7 @@ let loop = function () {
         title: "Attention!",
         message:
             notifications[Math.floor(Math.random() * notifications.length)],
+        wait: true,
     });
 
     anybar("question");
