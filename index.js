@@ -1,3 +1,5 @@
+//TODO: GIVE THIS A FRONTEND
+
 const anybar = require("anybar");
 const Timer = require("tiny-timer");
 const random = require("random");
@@ -5,6 +7,7 @@ const prompt = require("prompt");
 const argv = require("yargs").argv;
 const colors = require("colors/safe");
 const notifier = require("node-notifier");
+const nc = new notifier.NotificationCenter();
 const player = require("node-wav-player");
 const clear = require("clear");
 const figlet = require("figlet");
@@ -55,6 +58,10 @@ let loop = function () {
     const hoursToBed = `${bedTime.h} hours, ${bedTime.m} minutes, ${bedTime.s} seconds`;
     const hoursToWake = `${upTime.h} hours, ${upTime.m} minutes, ${upTime.s} seconds`;
 
+    let timer = new Timer([{ interval: 1000, stopwatch: false }]);
+    let pauseTimer = new Timer([{ interval: 1000, stopwatch: false }]);
+    let autoNext = random.int((min = 60000), (max = 600000));
+
     const notifications = [
         "PUSHUPS!",
         "DIAPHRAGM!",
@@ -76,26 +83,29 @@ let loop = function () {
 
     let anybarToggle = false;
 
-    notifier.notify({
-        title: "Attention!",
-        message:
-            notifications[Math.floor(Math.random() * notifications.length)],
-        wait: true,
-    });
+    nc.notify(
+        {
+            title: "Attention!",
+            message:
+                notifications[Math.floor(Math.random() * notifications.length)],
+            timeout: 60,
+        },
+        function (error, response, metadata) {
+            console.log(response, metadata);
+        }
+    );
 
     notifier.on("click", function (notifierObject, options, event) {
         // Triggers if `wait: true` and user clicks notification
+        console.log("clicked");
     });
 
     notifier.on("timeout", function (notifierObject, options) {
         // Triggers if `wait: true` and notification closes
+        console.log("timeout");
     });
 
     anybar("question");
-
-    let timer = new Timer([{ interval: 1000, stopwatch: false }]);
-    let pauseTimer = new Timer([{ interval: 1000, stopwatch: false }]);
-    let autoNext = random.int((min = 60000), (max = 600000));
 
     if (argv.auto) {
         console.log(`auto mode = ${argv.auto}, verbose = ${argv.verbose}`);
