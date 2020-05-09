@@ -181,6 +181,7 @@ let loop = function () {
                 }
             );
 
+            document.getElementById("time").innerHTML = `${next.m}:${next.s}`;
             // console.log("to bed: " + hoursToBed, "to wake up: " + hoursToWake);
         }
         anybarToggle ? anybar("blue") : anybar("red");
